@@ -49,11 +49,25 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam(required = false) long age) {
-        if (age > 0) {
+    public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam(required = false) Long age) {
+        if (age != null && age > 0) {
             return ResponseEntity.ok(studentService.findByAge(age));
         }
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("/between")
+    public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam(required = false) Long ageMin,
+                                                                @RequestParam(required = false) Long ageMax) {
+        if (ageMin != null && ageMax != null && ageMin > 0 && ageMax > ageMin) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(ageMin, ageMax));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("/{id}/faculty")
+    public Faculty getStudentFaculty(@PathVariable Long id) {
+        return studentService.findById(id).map(Student::getFaculty).orElse(null);
     }
 
 
