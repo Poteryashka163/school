@@ -1,6 +1,5 @@
 package ru.hogwarts.school.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,6 +12,7 @@ public class Faculty {
     private Long id;
     private String name;
     private String color;
+
 
     @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
     private List<Student> students;
@@ -63,10 +63,11 @@ public class Faculty {
         return Objects.hash(id, name, color);
     }
 
-    @JsonIgnore
     public List<Student> getStudents() {
         return students;
     }
 
-
+    public void setStudents(List<Student> students) {
+        this.students = students;
+    }
 }
