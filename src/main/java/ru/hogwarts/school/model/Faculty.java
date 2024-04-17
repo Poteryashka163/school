@@ -13,7 +13,8 @@ public class Faculty {
     private String name;
     private String color;
 
-    @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "faculty")
     @JsonIgnore
     private List<Student> students;
 
