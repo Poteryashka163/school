@@ -99,7 +99,7 @@ class SchoolApplicationStudentControllerTests {
 
     @Test
     public void TestfindStudentsByAge() {
-        long testAge = 16;// Подставляем необходимый возраст.
+        Integer testAge = 16;// Подставляем необходимый возраст.
         ResponseEntity<Collection> response = restTemplate.getForEntity("?age=" + testAge, Collection.class);
         Assertions.
                 assertThat(response.getStatusCode().is2xxSuccessful());

@@ -31,7 +31,7 @@ public class StudentService {
         studentRepository.deleteById(studentId);
     }
 
-    public List <Student> findByAge (Long age){
+    public List <Student> findByAge (Integer age){
         return studentRepository.findByAge(age);
     }
 

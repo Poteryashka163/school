@@ -61,7 +61,7 @@ public class SchoolApplicationStudentControllerMockTests {
                 .andExpect(jsonPath("$.name").value("TestNameStudent"))
                 .andExpect(jsonPath("$.age").value(55));
 
-        when(studentService.getStudentById(1L)).thenReturn(null);
+        when(studentService.getStudentById(12L)).thenReturn(null);
         mockMvc.perform(get("/student/{studentId}", 12L))
                 .andExpect(status().isNotFound());
     }
@@ -99,18 +99,18 @@ public class SchoolApplicationStudentControllerMockTests {
     @Test
     public void findStudentsByAgeTest() throws Exception {
         Student student = new Student();
-        student.setId(12l);
+        student.setId(12L);
         student.setAge(55);
         student.setName("TestNameStudent");
         List<Student> students = List.of(student);
-        when(studentService.findByAge(12L)).thenReturn(students);
+        when(studentService.findByAge(55)).thenReturn(students);
 
         mockMvc.perform(get("/student").param("age", "55"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("TestNameStudent"))
                 .andExpect(jsonPath("$[0].age").value(55));
 
-        when(studentService.findByAge(12L)).thenReturn(Collections.emptyList());
+        when(studentService.findByAge(55)).thenReturn(Collections.emptyList());
         mockMvc.perform(get("/student").param("age", "55"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
@@ -144,22 +144,22 @@ public class SchoolApplicationStudentControllerMockTests {
     @Test
     public void getStudentFacultyTest() throws Exception {
         Faculty faculty = new Faculty();
-        faculty.setId(12l);
+        faculty.setId(12L);
         faculty.setName("TestNameFaculty");
         faculty.setColor("Green");
         Student student = new Student();
-        student.setId(12l);
+        student.setId(10L);
         student.setAge(55);
         student.setName("TestNameStudent");
-        when(studentService.findById(12L)).thenReturn(java.util.Optional.of(student));
+        when(studentService.findById(10L)).thenReturn(java.util.Optional.of(student));
 
-        mockMvc.perform(get("/student/{id}/faculty", 12L))
+        mockMvc.perform(get("/student/{id}/faculty", 10L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(12L))
                 .andExpect(jsonPath("$.name").value("TestNameFaculty"));
 
-        when(studentService.findById(12L)).thenReturn(Optional.empty());
-        mockMvc.perform(get("/student/{id}/faculty", 12L))
+        when(studentService.findById(10L)).thenReturn(Optional.empty());
+        mockMvc.perform(get("/student/{id}/faculty", 10L))
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }

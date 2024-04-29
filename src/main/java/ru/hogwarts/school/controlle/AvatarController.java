@@ -1,4 +1,9 @@
 package ru.hogwarts.school.controlle;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -6,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
+import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.service.AvatarService;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +26,12 @@ import java.nio.file.Path;
 @RequestMapping("/studentAvatar")
 public class AvatarController {
     private final AvatarService avatarService;
+    @Autowired
+    private final AvatarRepository avatarRepository;
 
-    public AvatarController(final AvatarService avatarService) {
+    public AvatarController(final AvatarService avatarService, final AvatarRepository avatarRepository) {
         this.avatarService = avatarService;
+        this.avatarRepository = avatarRepository;
     }
 
 
@@ -30,7 +40,6 @@ public class AvatarController {
         avatarService.uploadAvatar(studentId, avatar);
         return ResponseEntity.ok().build();
     }
-
 
 
     @GetMapping(value = "/{id}/avatar/preview")
@@ -58,5 +67,14 @@ public class AvatarController {
             is.transferTo(os);
         }
 
+    }
+
+    @GetMapping("/avatars")
+    public ResponseEntity<Page<Avatar>> findAllByOrderByCreatedAtDesc(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Avatar> avatars = avatarRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return ResponseEntity.ok(avatars);
     }
 }

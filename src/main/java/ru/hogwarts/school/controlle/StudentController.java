@@ -1,21 +1,27 @@
 package ru.hogwarts.school.controlle;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RequestMapping("student")
 @RestController
 public class StudentController {
     private final StudentService studentService;
+    private final StudentRepository studentRepository;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService,StudentRepository studentRepository) {
         this.studentService = studentService;
+        this.studentRepository = studentRepository;
     }
 
     @PostMapping
@@ -49,7 +55,7 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam(required = false) Long age) {
+    public ResponseEntity<Collection<Student>> findStudentsByAge(@RequestParam(required = false) Integer age) {
         if (age != null && age > 0) {
             return ResponseEntity.ok(studentService.findByAge(age));
         }
@@ -70,5 +76,20 @@ public class StudentController {
         return studentService.findById(id).map(Student::getFaculty).orElse(null);
     }
 
+    @GetMapping("/students/count")
+    public ResponseEntity<Integer> getCountAllStudents() {
+        Integer count = studentRepository.countAllStudents();
+        return ResponseEntity.ok(count);
+    }
+    @GetMapping("/students/average-age")
+    public ResponseEntity<Integer> getAverageAge() {
+        Integer averageAge = studentRepository.getAverageAge();
+        return ResponseEntity.ok(averageAge);
+    }
+    @GetMapping("/students/last-five")
+    public ResponseEntity<List<Student>> getLastFiveStudents() {
+        Page<Student> page = studentRepository.findLastFiveStudents(PageRequest.of(0, 5));
+        return ResponseEntity.ok(page.getContent());
+    }
 
 }
