@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controlle;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,15 +21,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/studentAvatar")
 public class AvatarController {
     private final AvatarService avatarService;
-    @Autowired
+
     private final AvatarRepository avatarRepository;
 
+    @Autowired
     public AvatarController(final AvatarService avatarService, final AvatarRepository avatarRepository) {
         this.avatarService = avatarService;
         this.avatarRepository = avatarRepository;
@@ -60,7 +63,7 @@ public class AvatarController {
         Path path = Path.of(avatar.getFilePath());
 
         try (InputStream is = Files.newInputStream(path);
-             OutputStream os = response.getOutputStream();) {
+             OutputStream os = response.getOutputStream()) {
             response.setStatus(200);
             response.setContentType(avatar.getMediaType());
             response.setContentLength((int) avatar.getFileSize());
@@ -69,12 +72,9 @@ public class AvatarController {
 
     }
 
-    @GetMapping("/avatars")
-    public ResponseEntity<Page<Avatar>> findAllByOrderByCreatedAtDesc(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Avatar> avatars = avatarRepository.findAllByOrderByCreatedAtDesc(pageable);
+    @GetMapping
+    public ResponseEntity<List<Avatar>> findAvatars(int page, int size) {
+        List<Avatar> avatars = avatarService.avatarPage(page,size);
         return ResponseEntity.ok(avatars);
     }
 }

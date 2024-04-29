@@ -76,20 +76,20 @@ public class StudentController {
         return studentService.findById(id).map(Student::getFaculty).orElse(null);
     }
 
-    @GetMapping("/students/count")
-    public ResponseEntity<Integer> getCountAllStudents() {
-        Integer count = studentRepository.countAllStudents();
+    @GetMapping("/count")
+    public ResponseEntity<Long> getCountAllStudents() {
+        Long count = studentService.count();
         return ResponseEntity.ok(count);
     }
-    @GetMapping("/students/average-age")
+    @GetMapping("/average-age")
     public ResponseEntity<Integer> getAverageAge() {
-        Integer averageAge = studentRepository.getAverageAge();
+        Integer averageAge = studentService.findAverageAge();
         return ResponseEntity.ok(averageAge);
     }
-    @GetMapping("/students/last-five")
+    @GetMapping("/last-five")
     public ResponseEntity<List<Student>> getLastFiveStudents() {
-        Page<Student> page = studentRepository.findLastFiveStudents(PageRequest.of(0, 5));
-        return ResponseEntity.ok(page.getContent());
+        List<Student> page = studentService.getLastStudent();
+        return ResponseEntity.ok(page);
     }
 
 }
