@@ -30,7 +30,7 @@ public class StudentController {
         return ResponseEntity.ok(createStudent);
     }
 
-    @GetMapping("{studentId}")
+    @GetMapping("/studentId/{studentId}")
     public ResponseEntity<Student> getStudent(@PathVariable Long studentId) {
         Student user = studentService.getStudentById(studentId);
         if (user == null) {
@@ -90,6 +90,11 @@ public class StudentController {
     public ResponseEntity<List<Student>> getLastFiveStudents() {
         List<Student> page = studentService.getLastStudent();
         return ResponseEntity.ok(page);
+    }
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<Student>> getStudentByName(@PathVariable String name) {
+        List<Student> students = studentService.getStudentByName(name);
+        return ResponseEntity.ok(students);
     }
 
 }

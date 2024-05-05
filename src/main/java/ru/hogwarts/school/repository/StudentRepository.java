@@ -23,4 +23,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query(value = "SELECT '*' FROM student ORDER BY id DESC limit :quantity", nativeQuery = true)
     List<Student> findLastFiveStudents(@Param("quantity") int quantity);
+
+    List<Student>getStudentByName(String name);
 }

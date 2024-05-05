@@ -34,19 +34,7 @@ public class Avatar {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, filePath, fileSize, mediaType, Arrays.hashCode(data), student);
-    }
-
-    @Override
-    public String toString() {
-        return "Avatar{" +
-                "id=" + id +
-                ", filePath='" + filePath + '\'' +
-                ", fileSize=" + fileSize +
-                ", mediaType='" + mediaType + '\'' +
-                ", data=" + Arrays.toString(data) +
-                ", student=" + student +
-                '}';
+        return Objects.hashCode(id);
     }
 
     public Long getId() {

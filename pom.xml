@@ -40,10 +40,17 @@
             <artifactId>webjars-locator-core</artifactId>
             <version>0.58</version>
         </dependency>
+
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
             <version>4.8.168</version>
+        </dependency>
+
+        <!-- liquibase зависимость -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
         </dependency>
 
 
