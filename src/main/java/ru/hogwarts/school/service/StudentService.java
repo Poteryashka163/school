@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import liquibase.pro.packaged.L;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -78,4 +81,20 @@ public class StudentService {
         return studentRepository.getStudentByName(name);
     }
 
+    public List<String>findAllStudentsByAlphabetically() {
+        logger.info("Was invoked method for find all students by alphabetically.");
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name.toUpperCase().startsWith("A"))
+                .sorted()
+                .map(String::toUpperCase)
+                .collect(Collectors.toList());
+    }
+    public double getAverageAge() {
+        List<Student> students = studentRepository.findAll();
+        OptionalDouble average = students.stream()
+                .mapToInt(Student::getAge)
+                .average();
+        return average.isPresent() ? average.getAsDouble() : 0;
+    }
 }

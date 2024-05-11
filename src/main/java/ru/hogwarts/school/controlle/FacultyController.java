@@ -70,4 +70,9 @@ public class FacultyController {
     public Collection<Student> getFacultyStudents(@PathVariable Long id) {
         return facultyService.findById(id).map(Faculty::getStudents).orElse(Collections.emptyList());
     }
+
+    @GetMapping("/longest-name-faculty")
+    public String getLongestFacultyName() {
+        return facultyService.getLongestFacultyName();
+    }
 }

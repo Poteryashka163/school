@@ -96,5 +96,14 @@ public class StudentController {
         List<Student> students = studentService.getStudentByName(name);
         return ResponseEntity.ok(students);
     }
+    @GetMapping("find-all")
+    public ResponseEntity<List<String>> findAllStudentsByAlphabetically() {
+        List<String> students = studentService.findAllStudentsByAlphabetically();
+        return ResponseEntity.ok(students);
+    }
+    @GetMapping("/average-age")
+    public double getAverageAgeStudent() {
+        return studentService.getAverageAge();
+    }
 
 }
