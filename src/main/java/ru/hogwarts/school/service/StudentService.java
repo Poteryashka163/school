@@ -97,4 +97,8 @@ public class StudentService {
                 .average();
         return average.isPresent() ? average.getAsDouble() : 0;
     }
+
+    public List<Student>findAllStudents() {
+        return studentRepository.findAll();
+    }
 }

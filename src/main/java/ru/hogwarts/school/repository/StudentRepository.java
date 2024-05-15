@@ -25,4 +25,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     List<Student> findLastFiveStudents(@Param("quantity") int quantity);
 
     List<Student>getStudentByName(String name);
+
+
 }
