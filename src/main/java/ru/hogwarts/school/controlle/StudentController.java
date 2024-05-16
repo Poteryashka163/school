@@ -113,55 +113,12 @@ public class StudentController {
     }
 
     @GetMapping("/print-parallel")
-    public void printStudentNames() {
-        List<Student> students = studentService.findAllStudents();
-        new Thread(() -> {
-            if (students.size() >= 2) {
-                System.out.println("Main thread: " + students.get(0).getName());
-                System.out.println("Main thread: " + students.get(1).getName());
-            }
-        }).start();
-
-
-        new Thread(() -> {
-            if (students.size() >= 4) {
-                System.out.println("Parallel thread 1: " + students.get(2).getName());
-                System.out.println("Parallel thread 1: " + students.get(3).getName());
-            }
-        }).start();
-
-
-        new Thread(() -> {
-            if (students.size() >= 6) {
-                System.out.println("Parallel thread 2: " + students.get(4).getName());
-                System.out.println("Parallel thread 2: " + students.get(5).getName());
-            }
-        }).start();
-
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    public void printStudentNamesParallel() {
+        studentService.printStudentsName();
     }
 
     @GetMapping("/students/print-synchronized")
     public void printStudentsSynchronized() {
-        List<Student> students = studentService.findAllStudents();
-        printStudentNames(students, 0, 2, "Main thread: ");
-        new Thread(() -> printStudentNames(students, 2, 4, "Parallel thread 1: ")).start();
-        new Thread(() -> printStudentNames(students, 4, 6, "Parallel thread 2: ")).start();
-    }
-
-    public void printStudentNames(List<Student> students, int startIndex, int endIndex, String threadName) {
-        synchronized (this) {
-            for (int i = startIndex; i < endIndex; i++) {
-                if (i < students.size()) {
-                    System.out.println(threadName + students.get(i).getName());
-                }
-            }
-        }
+        studentService.printStudentsNamesSynchronized();
     }
 }

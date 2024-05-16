@@ -71,17 +71,18 @@ public class StudentService {
         logger.info("Was invoked method for find average age.");
         return studentRepository.getAverageAge();
     }
-    public List<Student>getLastStudent(){
+
+    public List<Student> getLastStudent() {
         logger.info("Was invoked method for get last student.");
         return studentRepository.findLastFiveStudents(5);
     }
 
-    public List<Student>getStudentByName(String name) {
+    public List<Student> getStudentByName(String name) {
         logger.info("Was invoked method for get student by name.");
         return studentRepository.getStudentByName(name);
     }
 
-    public List<String>findAllStudentsByAlphabetically() {
+    public List<String> findAllStudentsByAlphabetically() {
         logger.info("Was invoked method for find all students by alphabetically.");
         return studentRepository.findAll().stream()
                 .map(Student::getName)
@@ -90,6 +91,7 @@ public class StudentService {
                 .map(String::toUpperCase)
                 .collect(Collectors.toList());
     }
+
     public double getAverageAge() {
         List<Student> students = studentRepository.findAll();
         OptionalDouble average = students.stream()
@@ -98,7 +100,57 @@ public class StudentService {
         return average.isPresent() ? average.getAsDouble() : 0;
     }
 
-    public List<Student>findAllStudents() {
-        return studentRepository.findAll();
+
+    public void printStudentsName() {
+        List<Student> students = studentRepository.findAll();
+        new Thread(() -> {
+            if (students.size() >= 2) {
+                System.out.println("Main thread: " + students.get(0).getName());
+                System.out.println("Main thread: " + students.get(1).getName());
+            }
+        }).start();
+
+
+        new Thread(() -> {
+            if (students.size() >= 4) {
+                System.out.println("Parallel thread 1: " + students.get(2).getName());
+                System.out.println("Parallel thread 1: " + students.get(3).getName());
+            }
+        }).start();
+
+
+        new Thread(() -> {
+            if (students.size() >= 6) {
+                System.out.println("Parallel thread 2: " + students.get(4).getName());
+                System.out.println("Parallel thread 2: " + students.get(5).getName());
+            }
+        }).start();
+
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void printStudentsNamesSynchronized() {
+        List<Student> students = studentRepository.findAll();
+        printStudentNames(students, 0, 2, "Main thread: ");
+        new Thread(() -> printStudentNames(students, 2, 4, "Parallel thread 1: ")).start();
+        new Thread(() -> printStudentNames(students, 4, 6, "Parallel thread 2: ")).start();
+    }
+
+    public void printStudentNames(List<Student> students, int startIndex, int endIndex, String threadName) {
+        synchronized (this) {
+            for (int i = startIndex; i < endIndex; i++) {
+                if (i < students.size()) {
+                    System.out.println(threadName + students.get(i).getName());
+                }
+            }
+        }
     }
 }
+
+
